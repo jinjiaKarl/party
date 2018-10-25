@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>统计</title>
+    <link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+        crossorigin="anonymous">
+    <link rel="stylesheet" href="./main.css">
+
+</head>
+
+<body>
+    <header class="header">学校统计</header>
+
+    <div class="action container">
+        <h3>排序:(默认从最多到最少)</h3>
+        <div><button id='desc'>最多到最少</button>
+            <button id='asc'>最少到最多</button>
+        </div>
+
+    </div>
+    <div class="container">
+        <div class="row">
+            <div class="col-10" id='table'>
+
+            </div>
+        </div>
+    </div>
+    <script src="https://cdn.bootcss.com/lodash.js/4.17.11/lodash.core.js"></script>
+    <script src="./resource.js"></script>
+    <script src='./tools.js'></script>
+    <script src="./judge.js"></script>
+    <script src="./main.js"></script>
+    <script>
+        const { all, leftArr } = getName()
+
+        const resultArr = []
+        for (var key in all) {
+            resultArr.push({
+                name: key,
+                total: all[key].length
+            })
+        }
+
+        const table = document.getElementById('table');
+        let total = 0
+        let i = 0
+
+        function createHtml(arrays) {
+            var html = `<table class="table">
+                    <thead> <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">学校</th>
+
+                            <th scope="col">人数</th>
+                        </tr>
+                    </thead>
+                    <tbody>`;
+            arrays.forEach(item => {
+                i++;
+                total += item.total;
+                html += `<tr>
+                            <th scope="row">${i}</th>
+                            <td>${item.name}</td>
+                            <td>${item.total}</td>
+                        </tr>`
+            })
+            html += `<tr>
+                            <th scope="row">${i}</th>
+                            <td>其他</td>
+                            <td>${leftArr.length}</td>
+                        </tr><tr>
+                            <td colspan='2'>总计</td>
+                            <td >${total + leftArr.length}</td>
+                        </tr></tbody>
+                </table>`
+            return html
+        }
+        // leftArr
+
+
+        const sortArr = resultArr.sort(compare("total", 'desc'));
+        table.innerHTML = createHtml(sortArr)
+
+        // 事件
+        const descBtn = document.getElementById('desc');
+        const ascBtn = document.getElementById('asc');
+
+        descBtn.addEventListener('click', () => {
+            i = 0
+            total = 0
+            table.innerHTML = createHtml(resultArr.sort(compare("total", 'desc')))
+        })
+        ascBtn.addEventListener('click', () => {
+            i = 0
+            total = 0
+            table.innerHTML = createHtml(resultArr.sort(compare("total", 'asc')))
+        })
+
+
+    </script>
+</body>
+
+</html>
